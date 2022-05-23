@@ -1,0 +1,11 @@
+import axios from 'axios';
+
+class CollectionServices {
+
+  getAll() {
+    return axios.get(`api/getCategory`);
+  }
+
+}
+
+export default new CollectionServices();
