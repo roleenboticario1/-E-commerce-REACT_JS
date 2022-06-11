@@ -60,7 +60,12 @@ function Navbar () {
                         <li className="nav-item">
                         <Link className="nav-link active" aria-current="page" to="/contact">Contact</Link>
                         </li>
-
+                        <li className="nav-item">
+                        <Link className="nav-link active" aria-current="page" to="/collections">Collections</Link>
+                        </li>
+                        <li className="nav-item">
+                         <Link className="nav-link active" aria-current="page" to="/cart">Cart &nbsp;</Link>
+                        </li>
                         {authButtons}
                      </ul>
                     </div>

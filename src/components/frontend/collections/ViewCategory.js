@@ -9,16 +9,25 @@ function ViewCategory () {
     const [ category, setCategory ] =  useState([]);
 
 	useEffect(() => {
- 
+    
+    var isMounted = true;
+
     CollectionServices.getAll().then( res => {
         
-        if(res.data.status === 200)
+        if(isMounted)
         {
-        	setCategory(res.data.category);
-        }
+            if(res.data.status === 200)
+            {
+                setCategory(res.data.category);
+            }
 
-        setLoading(false);
+               setLoading(false);
+        }
     });
+
+    return () => {
+         isMounted = false;
+    }
 
 	}, []);
 
@@ -35,11 +44,11 @@ function ViewCategory () {
                <Link to="">
                  <img src="" className="w-100" alt={item.name} />
                </Link>
-             </div>
-             <div className="card-body">
-               <Link to={`collections/${item.name}`}>
-                 <h5>{item.name}</h5>
-               </Link>
+                 <div className="card-body">
+                   <Link to={`collections/${item.slug}`}>
+                     <h5>{item.name}</h5>
+                   </Link>
+                 </div>
              </div>
            </div>
       	 )
@@ -54,7 +63,6 @@ function ViewCategory () {
                 <h6>Categoty Page</h6>
              </div>
            </div>
-
            <div className="py-3">
              <div className="container">
                 <div className="row">

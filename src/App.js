@@ -24,15 +24,14 @@ function App() {
      <div className="App">
          <Router>
             <Switch>
-                //una dapat to
-                <AdminPrivateroute  path="/admin" name="Admin"/>
-                <PublicRoute path="/" name="Home" />
                 <Route path="/login">
                  {localStorage.getItem('auth_token') ? <Redirect to="/" /> : <Login />}
                 </Route>
                 <Route path="/register">
                  {localStorage.getItem('auth_token') ? <Redirect to="/" /> : <Register />}
-                </Route>       
+                </Route>  
+                <AdminPrivateroute  path="/admin" name="Admin"/>
+                <PublicRoute path="/" name="Home" />     
             </Switch>
         </Router>
      </div>
