@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import {  useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import axios from 'axios';
 
 function Checkout () {
     
     var totalCartPrice = 0;
-	const history = useHistory();
+	  const history = useHistory();
     const [ loading, setLoading ] =  useState(true);
     const [ cart, setCart ] =  useState([]);
     const [ checkoutInput, setCheckoutInput ] = useState({
@@ -19,6 +19,8 @@ function Checkout () {
       state : '',
       zip_code : ''
     });
+
+    const [ error, setError] = useState([]);
    
     //check User logged in or not
     if(!localStorage.getItem('auth_token')){
@@ -55,13 +57,13 @@ function Checkout () {
 
     const handleInput = (e) => {
     	e.persist();
-        setCheckoutInput({...checkoutInput, [e.traget.name] : e.target.value });
+        setCheckoutInput({...checkoutInput, [e.target.name] : e.target.value });
     }
 
     const submitOrder = (e) => {
     	e.preventDefault();
 
-    	const data => {
+    	const data = {
     	   firstname : checkoutInput.firstname,
 	       lastname : checkoutInput.lastname,
 	       phone : checkoutInput.phone,
@@ -72,7 +74,21 @@ function Checkout () {
 	       zip_code : checkoutInput.zip_code
     	}
 
-    	//6:34 https://www.youtube.com/watch?v=yWCjbcnyyRk&list=PLRheCL1cXHrtT6rOSlab8VzMKBlfL-IEA&index=30
+      axios.post(`api/place-order`, data).then(res=>{
+         if(res.data.status === 200)
+         {
+            swal("Order Placed Sucessfully",res.data.message,"success");
+            setError([]);
+            history.push('/thank-you');
+            // 34:11 https://www.youtube.com/watch?v=yWCjbcnyyRk&list=PLRheCL1cXHrtT6rOSlab8VzMKBlfL-IEA&index=30
+         }
+         else if(res.data.status === 422)
+         {
+            swal("All Fields are mandatory","","success");
+            setError(res.data.errors);
+         }
+
+      });
     }
 
     if(loading){
@@ -106,6 +122,7 @@ function Checkout () {
                        <div className="form-group mb-3">
                          <label>First Name</label>
                          <input type="text" name="firstname" onChange={handleInput} value={checkoutInput.firstname} className="form-control" />
+                         <small className="text-danger">{ error.firstname}</small>
                        </div>
                      </div>
 
@@ -113,6 +130,7 @@ function Checkout () {
                        <div className="form-group mb-3">
                          <label>Last Name</label>
                          <input type="text" name="lastname" onChange={handleInput} value={checkoutInput.lastname} className="form-control" />
+                         <small className="text-danger">{ error.lastname }</small>
                        </div>
                      </div>
 
@@ -120,6 +138,7 @@ function Checkout () {
                        <div className="form-group mb-3">
                          <label>Phone</label>
                          <input type="text" name="phone" onChange={handleInput} value={checkoutInput.phone} className="form-control" />
+                         <small className="text-danger">{ error.phone }</small>
                        </div>
                      </div>
 
@@ -127,6 +146,7 @@ function Checkout () {
                        <div className="form-group mb-3">
                          <label>Email Address</label>
                          <input type="text" name="email_address" onChange={handleInput} value={checkoutInput.email_address} className="form-control" />
+                         <small className="text-danger">{ error.email_address }</small>
                        </div>
                      </div>
 
@@ -134,6 +154,7 @@ function Checkout () {
                        <div className="form-group mb-3">
                          <label>Full Address</label>
                          <textarea type="text" name="address" onChange={handleInput} value={checkoutInput.address} className="form-control"></textarea>
+                         <small className="text-danger">{ error.address }</small>
                        </div>
                      </div>
 
@@ -141,6 +162,7 @@ function Checkout () {
                        <div className="form-group mb-3">
                          <label>City</label>
                          <input type="text" name="city" onChange={handleInput} value={checkoutInput.city} className="form-control" />
+                         <small className="text-danger">{ error.city }</small>
                        </div>
                      </div>
 
@@ -148,6 +170,7 @@ function Checkout () {
                        <div className="form-group mb-3">
                          <label>State</label>
                          <input type="text" name="state" onChange={handleInput} value={checkoutInput.state} className="form-control" />
+                         <small className="text-danger">{ error.state }</small>
                        </div>
                      </div>
 
@@ -155,6 +178,7 @@ function Checkout () {
                        <div className="form-group mb-3">
                          <label>Zip Code</label>
                          <input type="text" name="zip_code" onChange={handleInput} value={checkoutInput.zip_code} className="form-control" />
+                         <small className="text-danger">{ error.zip_code }</small>
                        </div>
                      </div>
 
